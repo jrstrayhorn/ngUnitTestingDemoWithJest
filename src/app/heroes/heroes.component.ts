@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
 
+// this component has 2 collaborators that we have to deal with
+// 1. in typescript - the HeroService via DI
+// 2. in template - child component <app-hero>
 @Component({
   selector: 'app-heroes',
   templateUrl: './heroes.component.html',
