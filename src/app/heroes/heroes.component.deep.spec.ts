@@ -41,20 +41,28 @@ describe('HeroesComponent (deep tests)', () => {
       schemas: [NO_ERRORS_SCHEMA]
     });
     fixture = TestBed.createComponent(HeroesComponent);
+  });
 
+  // good way to start test to make sure test setup in beforeEach is working
+  // it('should be true', () => {
+  //   expect(true).toBe(true);
+  // });
+
+  // test that input is being passed into the child component correctly
+  it('should render each hero as a HeroComponent', () => {
     // JASMINE
     //mockHeroService.getHeroes.and.returnValue(of(HEROES));
-
     // JEST
     mockHeroService.getHeroes.mockReturnValue(of(HEROES));
 
-    // triggering change detection here so components are already initialized before
-    // we start to test
-    // will run change detection on parent and all children
+    // run ngOnInit
     fixture.detectChanges();
-  });
 
-  it('should be true', () => {
-    expect(true).toBe(true);
+    // better way to find child components (stongly typed)
+    const heroComponentDEs = fixture.debugElement.queryAll(By.directive(HeroComponent));
+    expect(heroComponentDEs.length).toEqual(3);
+    heroComponentDEs.forEach((componentDE, idx) => {
+      expect((componentDE.componentInstance as HeroComponent).hero).toEqual(HEROES[idx]);
+    });
   });
 });
