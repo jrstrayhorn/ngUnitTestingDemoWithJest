@@ -4,6 +4,9 @@ import { NO_ERRORS_SCHEMA, Component, Input } from '@angular/core';
 import { HeroService } from '../hero.service';
 import { of } from 'rxjs';
 import { Hero } from '../hero';
+import { By } from '@angular/platform-browser';
+
+// Integrated Tests - using Angular to render component (can dig into template)
 
 // we don't want to use the real HeroService b/c it makes HTTP calls
 // and b/c we only want to test one unit at a time so we need to draw
@@ -55,9 +58,18 @@ describe('HeroesComponent (shallow tests)', () => {
 
     // JEST
     mockHeroService.getHeroes.mockReturnValue(of(HEROES));
-
     fixture.detectChanges();
 
     expect(fixture.componentInstance.heroes.length).toBe(3);
+  });
+
+  it('should create one li for each hero', () => {
+    mockHeroService.getHeroes.mockReturnValue(of(HEROES));
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.queryAll(By.css('li')).length).toBe(3);
+
+    // could also count # of app-hero components created as well
+    //expect(fixture.debugElement.queryAll(By.css('li')).length).toBe(3);
   });
 });
