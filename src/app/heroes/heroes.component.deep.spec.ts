@@ -112,4 +112,17 @@ describe('HeroesComponent (deep tests)', () => {
 
     expect(mockHeroService.deleteHero).toHaveBeenCalledWith(HEROES[0]);
   });
+
+  it(`should call delete (from parent) when the Hero Component's (child)
+   delete event emitter is emitted`, () => {
+    jest.spyOn(fixture.componentInstance, 'delete').mockImplementation(() => {});
+    mockHeroService.getHeroes.mockReturnValue(of(HEROES));
+
+    fixture.detectChanges();
+
+    const heroComponents = fixture.debugElement.queryAll(By.directive(HeroComponent));
+    (heroComponents[0].componentInstance as HeroComponent).delete.emit(undefined);
+
+    expect(fixture.componentInstance.delete).toHaveBeenCalledWith(HEROES[0]);
+  });
 });
