@@ -177,7 +177,7 @@ describe('HeroesComponent (deep tests)', () => {
 
   // testing to make sure routerLink is configured correctly
   // if test breaks means someone broke router/app links
-  it('should have the correct route for the first hero', () => {
+  it('should have the correct route for the first hero (is it configured corrected?)', () => {
     mockHeroService.getHeroes.mockReturnValue(of(HEROES));
     fixture.detectChanges();
 
