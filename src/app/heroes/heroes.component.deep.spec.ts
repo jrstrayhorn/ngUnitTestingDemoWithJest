@@ -139,4 +139,22 @@ describe('HeroesComponent (deep tests)', () => {
 
     expect(fixture.componentInstance.delete).toHaveBeenCalledWith(HEROES[0]);
   });
+
+  it('should add a new hero to the hero list wen the add button is clicked', () => {
+    mockHeroService.getHeroes.mockReturnValue(of(HEROES));
+    fixture.detectChanges();
+    const name = 'Mr. Ice';
+    mockHeroService.addHero.mockReturnValue(of({ id: 5, name: name, strength: 4 } as Hero));
+    const inputElement = fixture.debugElement.query(By.css('input')).nativeElement as HTMLInputElement;
+    const addButton = fixture.debugElement.queryAll(By.css('button'))[0];
+
+    inputElement.value = name; // typing Mr. Ice into input box
+    addButton.triggerEventHandler('click', null); // we don't use the $event object so can pass a null
+    fixture.detectChanges();
+
+    const heroText = fixture.debugElement.query(By.css('ul')).nativeElement.textContent;
+    expect(heroText).toContain(name);
+
+    // could also grab all li's and check the text of the 4th one
+  });
 });
