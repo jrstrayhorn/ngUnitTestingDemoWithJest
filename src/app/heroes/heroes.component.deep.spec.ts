@@ -65,4 +65,51 @@ describe('HeroesComponent (deep tests)', () => {
       expect((componentDE.componentInstance as HeroComponent).hero).toEqual(HEROES[idx]);
     });
   });
+
+  it(`should call delete (from parent) when the Hero Component's (child)
+   delete button is clicked`, () => {
+    // JASMINE - find the method on the component and 'watch' to see if it gets called
+    //spyOn(fixture.componentInstance, 'delete');
+    // JEST
+    // important!! - by default.. jest.spyOn does not override the implementation
+    // this is the opposite of jasmine.spyOn which will watch/spy but not call the method
+    // if you don't want to call through, you have to mock the implementation
+    // in this case we DONT want to actually call the implementation of the delete
+    // method on heroes component, we're just testing to make sure that delete method
+    // on the heroes is being called with correct parameter
+    // so need to mock implementation
+    jest.spyOn(fixture.componentInstance, 'delete').mockImplementation(() => {});
+
+    // JASMINE
+    //mockHeroService.getHeroes.and.returnValue(of(HEROES));
+    // JEST
+    mockHeroService.getHeroes.mockReturnValue(of(HEROES));
+
+    fixture.detectChanges();
+
+    // a component is a subclass of a directive
+    const heroComponents = fixture.debugElement.queryAll(By.directive(HeroComponent));
+    // passing a dummy object to click method since it expects to call stopPropagation() in the
+    // onDeleteClick method
+    heroComponents[0].query(By.css('button')).triggerEventHandler('click', { stopPropagation: () => {} });
+
+    expect(fixture.componentInstance.delete).toHaveBeenCalledWith(HEROES[0]);
+  });
+
+  it(`should call heroService.deleteHero when the Hero Component's (child)
+    delete button is clicked`, () => {
+    // in this test we DO want to call the implementation of the delete method
+    // so we can spy on heroService.deleteHero method
+    // no need to mockImplementation
+    jest.spyOn(fixture.componentInstance, 'delete');
+    mockHeroService.getHeroes.mockReturnValue(of(HEROES));
+    mockHeroService.deleteHero.mockReturnValue(of(true));
+
+    fixture.detectChanges();
+
+    const heroComponents = fixture.debugElement.queryAll(By.directive(HeroComponent));
+    heroComponents[0].query(By.css('button')).triggerEventHandler('click', { stopPropagation: () => {} });
+
+    expect(mockHeroService.deleteHero).toHaveBeenCalledWith(HEROES[0]);
+  });
 });
