@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick, flush, async } from '@angular/core/testing';
 import { HeroDetailComponent } from './hero-detail.component';
 import { ActivatedRoute } from '@angular/router';
 import { HeroService } from '../hero.service';
@@ -50,6 +50,7 @@ describe('HeroDetailCompoennt', () => {
   });
 
   // use fakeAsync to call async code like its sync code
+  // works with promises as well better to default to this
   it('should call updateHero when save is called.', fakeAsync(() => {
     mockHeroService.updateHero.mockReturnValue(of({})); // we ignore the return object
     fixture.detectChanges();
@@ -71,4 +72,17 @@ describe('HeroDetailCompoennt', () => {
     //   done();
     // }, 300);
   }));
+
+  // //only works with promises
+  // it('should call updateHero when save is called', async(() => {
+  //   mockHeroService.updateHero.mockReturnValue(of({}));
+  //   fixture.detectChanges();
+
+  //   fixture.componentInstance.save();
+
+  //   // wait til promise resolves
+  //   fixture.whenStable().then(() => {
+  //     expect(mockHeroService.updateHero).toHaveBeenCalled();
+  //   });
+  // }));
 });

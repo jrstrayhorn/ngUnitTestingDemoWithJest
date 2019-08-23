@@ -29,14 +29,20 @@ export class HeroDetailComponent implements OnInit {
     this.location.back();
   }
 
+  // save(): void {
+  //   debounce(
+  //     () => {
+  //       this.heroService.updateHero(this.hero).subscribe(() => this.goBack());
+  //     },
+  //     250,
+  //     false
+  //   )();
+  // }
   save(): void {
-    debounce(
-      () => {
-        this.heroService.updateHero(this.hero).subscribe(() => this.goBack());
-      },
-      250,
-      false
-    )();
+    var p = new Promise(resolve => {
+      this.heroService.updateHero(this.hero).subscribe(() => this.goBack());
+      resolve();
+    });
   }
 }
 
