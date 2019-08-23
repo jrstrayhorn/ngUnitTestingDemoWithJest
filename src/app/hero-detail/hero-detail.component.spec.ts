@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { HeroDetailComponent } from './hero-detail.component';
 import { ActivatedRoute } from '@angular/router';
 import { HeroService } from '../hero.service';
@@ -48,4 +48,27 @@ describe('HeroDetailCompoennt', () => {
 
     expect((fixture.nativeElement as HTMLElement).querySelector('h2').textContent).toContain('SUPERDUDE');
   });
+
+  // use fakeAsync to call async code like its sync code
+  it('should call updateHero when save is called.', fakeAsync(() => {
+    mockHeroService.updateHero.mockReturnValue(of({})); // we ignore the return object
+    fixture.detectChanges();
+
+    fixture.componentInstance.save();
+    // test will call save then tick forward 250 ms
+    // and call any callback after that 250 ms
+    tick(250);
+    // will look for any waiting tasks then fast forward
+    // clock to find any waiting tasks and run them
+    // simplier option when you don't know how long to wait
+    // flush()
+
+    expect(mockHeroService.updateHero).toHaveBeenCalled();
+
+    // don't do this as it makes your unit tests slower....
+    // setTimeout(() => {
+    //   expect(mockHeroService.updateHero).toHaveBeenCalled();
+    //   done();
+    // }, 300);
+  }));
 });
