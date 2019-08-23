@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
 import { HeroDetailComponent } from './hero-detail.component';
 import { ActivatedRoute } from '@angular/router';
 import { HeroService } from '../hero.service';
@@ -57,11 +57,11 @@ describe('HeroDetailCompoennt', () => {
     fixture.componentInstance.save();
     // test will call save then tick forward 250 ms
     // and call any callback after that 250 ms
-    tick(250);
+    //tick(250);
     // will look for any waiting tasks then fast forward
     // clock to find any waiting tasks and run them
     // simplier option when you don't know how long to wait
-    // flush()
+    flush();
 
     expect(mockHeroService.updateHero).toHaveBeenCalled();
 
